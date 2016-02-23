@@ -2,10 +2,15 @@ package org.fuxin.caller;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import com.web.task.WaveIdentifyUtil;
 import org.fuxin.caller.C.Operator;
 import org.fuxin.caller.C.Type;
 import org.fuxin.util.WaveFileReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /***
  * 这是个如何使用接口
@@ -15,6 +20,7 @@ import org.fuxin.util.WaveFileReader;
  *
  */
 public class WaveFileFilter {
+	private static Logger log = LoggerFactory.getLogger(WaveFileFilter.class);
 	/***
 	 * 处理目录下所有的文件
 	 * @param path
@@ -22,15 +28,13 @@ public class WaveFileFilter {
 	 * @return 
 	 */
 	public static ArrayList<WaveFileResult> CompareAllinPath(String path, String prefix) {
-		File file=new File(path);
-		File[] tempList = file.listFiles();
-				
+
+		File[] tempList = new File(path).listFiles();
 		ArrayList<WaveFileResult> resultlist = new ArrayList<WaveFileResult>();
-		
+
 		ArrayList<StandFile> stanlist = new ArrayList<StandFile>();
-		
-		
-		
+
+
 		//上面的都是要重新做的
 		
 		stanlist.add(new StandFile(new WaveFileReader(C.ydkhfile),4200,Operator.Yd,Type.Kh));
@@ -61,10 +65,15 @@ public class WaveFileFilter {
 			   
 			   //对文件进行分类
 			   //获得手机号码
-			   String phonenumber = tempList[i].getName().substring(0,11);
-			   ClassifyWave cw= new ClassifyWave(); 
-			   WaveFileResult wfr = cw.Filter(phonenumber,tempList[i], stanlist); 
-			   resultlist.add(wfr);
+			   String mobile = tempList[i].getName().substring(0,11);
+
+			   log.info("手机号 mobile:"+mobile);
+			   try {
+				   WaveFileResult wfr = WaveIdentifyUtil.indentify(mobile, tempList[i]);
+				   log.info(""+wfr.getType().getCode()+"   "+wfr.getType().getSimpleName());
+			   }catch (Exception e){
+				   e.printStackTrace();
+			   }
 		   }
 		   if (tempList[i].isDirectory()) {
 			   

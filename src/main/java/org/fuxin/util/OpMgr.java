@@ -12,7 +12,7 @@ public class OpMgr {
 		if(substring.length()>=3) 
 		{
 			String prefix = substring.substring(0,3);
-			System.out.println(prefix);
+			//System.out.println(prefix);
 			if(Contains(C.ydprefix,prefix))
 				return C.Operator.Yd;
 			if(Contains(C.ltprefix,prefix))

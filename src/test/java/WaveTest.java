@@ -1,10 +1,14 @@
 import com.web.task.WaveIdentifyUtil;
 import org.fuxin.caller.C;
+import org.fuxin.caller.WaveFileFilter;
 import org.fuxin.caller.WaveFileResult;
+import org.fuxin.util.AudioPlay;
+import org.fuxin.util.FuOutput;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,10 +45,26 @@ public class WaveTest {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
 
-//        TelePhone phone = new TelePhone(mobile);
-//        phone.identifyWave(urlstr);
-//
-//       log.info(""+phone.getStatus().getSimpleName());
+
+    @Test
+    public void runtest2(){
+        WaveIdentifyUtil.setWaveSampleResourceDir("C:\\standnew\\");
+        log.info("PhoneFilter Starting...");
+        long start = System.currentTimeMillis();
+
+        String path="c:\\sound20\\lt20";
+        String prefix="1";
+
+        ArrayList<WaveFileResult> resultlist= WaveFileFilter.CompareAllinPath(path,prefix);
+        log.info("共"+resultlist.size()+"个电话");
+        FuOutput.writeToFile(resultlist, "list");
+
+
+
+        long end = System.currentTimeMillis();
+        log.info((end-start)+"ms");
+        new AudioPlay("e:\\work\\alarm07.wav");
     }
 }
